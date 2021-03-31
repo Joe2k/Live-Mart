@@ -26,10 +26,12 @@ router.post("/register", (req, res) => {
     if (user) {
       return res.status(400).json({ email: "Email already exists" });
     } else {
+      console.log(req.body);
       const newUser = new User({
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
+        location: req.body.marker,
       });
 
       // Hash password before saving in database

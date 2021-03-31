@@ -13,6 +13,12 @@ import Register from "./components/Auth/Register";
 import Login from "./components/Auth/Login";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/Dashboard/Dashboard";
+import ReactMapboxGl from "react-mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
+const Map = ReactMapboxGl({
+  accessToken:
+    "pk.eyJ1Ijoiam9lMmsiLCJhIjoiY2ttd2I2Zmx6MGRmaTJxcHE4bmw2Zzl5MCJ9.HGFYGNmE7qIORzu2nKAQ1w",
+});
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {

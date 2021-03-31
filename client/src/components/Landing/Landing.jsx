@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Button, Grid } from "@material-ui/core";
-
 class Landing extends Component {
   render() {
     return (
