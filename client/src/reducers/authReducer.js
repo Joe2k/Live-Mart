@@ -1,9 +1,10 @@
-import { SET_CURRENT_USER, USER_LOADING } from "../actions/types";
+import { SET_CURRENT_USER, USER_LOADING, SET_OTP } from "../actions/types";
 const isEmpty = require("is-empty");
 const initialState = {
   isAuthenticated: false,
   user: {},
   loading: false,
+  isOtp: false,
 };
 export default function (state = initialState, action) {
   switch (action.type) {
@@ -17,6 +18,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: true,
+      };
+    case SET_OTP:
+      return {
+        ...state,
+        isOtp: true,
       };
     default:
       return state;

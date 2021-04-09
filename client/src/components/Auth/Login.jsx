@@ -67,10 +67,13 @@ class Login extends Component {
     this.state = {
       email: "",
       password: "",
+      otp: "",
       errors: {},
+      isOtp: false,
     };
   }
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
     if (nextProps.auth.isAuthenticated) {
       this.props.history.push("/dashboard"); // push user to dashboard when they login
     }
@@ -78,6 +81,9 @@ class Login extends Component {
       this.setState({
         errors: nextProps.errors,
       });
+    }
+    if (nextProps.auth.isOtp) {
+      this.setState({ isOtp: true });
     }
   }
 
@@ -91,14 +97,26 @@ class Login extends Component {
   onChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });
   };
-  onSubmit = (e) => {
+  onSubmit = async (e) => {
     e.preventDefault();
     const userData = {
       email: this.state.email,
       password: this.state.password,
     };
     console.log(userData);
-    this.props.loginUser(userData); // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
+    //this.setState({ isOtp: true });
+    this.props.loginUser(userData, false); // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
+    console.log(this.state);
+  };
+  onSubmitOtp = async (e) => {
+    e.preventDefault();
+    const userData = {
+      email: this.state.email,
+      password: this.state.password,
+      otp: this.state.otp,
+    };
+    console.log(userData);
+    this.props.loginUser(userData, true);
   };
   render() {
     const { errors } = this.state;
@@ -115,57 +133,94 @@ class Login extends Component {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <form className={classes.form} noValidate onSubmit={this.onSubmit}>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                onChange={this.onChange}
-                value={this.state.email}
-                error={errors.email || errors.emailnotfound}
-                helperText={errors.email || errors.emailnotfound}
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                onChange={this.onChange}
-                value={this.state.password}
-                error={errors.password || errors.passwordincorrect}
-                helperText={errors.password || errors.passwordincorrect}
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
+            {this.state.isOtp ? (
+              <form
+                className={classes.form}
+                noValidate
+                onSubmit={this.onSubmitOtp}
               >
-                Sign In
-              </Button>
-              <Grid container>
-                <Grid item>
-                  <Link href="/register" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="otp"
+                  label="Enter OTP from your email"
+                  name="otp"
+                  autoFocus
+                  onChange={this.onChange}
+                  value={this.state.otp}
+                  error={errors.otp}
+                  helperText={errors.otp}
+                  inputProps={{ maxLength: 4 }}
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  Sign In
+                </Button>
+              </form>
+            ) : (
+              <form
+                className={classes.form}
+                noValidate
+                onSubmit={this.onSubmit}
+              >
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                  onChange={this.onChange}
+                  value={this.state.email}
+                  error={errors.email || errors.emailnotfound}
+                  helperText={errors.email || errors.emailnotfound}
+                />
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  onChange={this.onChange}
+                  value={this.state.password}
+                  error={errors.password || errors.passwordincorrect}
+                  helperText={errors.password || errors.passwordincorrect}
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  Send OTP to Email
+                </Button>
+                <Grid container>
+                  <Grid item>
+                    <Link href="/register" variant="body2">
+                      {"Don't have an account? Sign Up"}
+                    </Link>
+                  </Grid>
                 </Grid>
-              </Grid>
-              <Box mt={5}>
-                <Copyright />
-              </Box>
-            </form>
+                <Box mt={5}>
+                  <Copyright />
+                </Box>
+              </form>
+            )}
           </div>
         </Grid>
       </Grid>
@@ -176,10 +231,12 @@ Login.propTypes = {
   loginUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
+  isOtp: PropTypes.bool.isRequired,
 };
 const mapStateToProps = (state) => ({
   auth: state.auth,
   errors: state.errors,
+  isOtp: state.isOtp,
 });
 export default withStyles(styles, { withTheme: true })(
   connect(mapStateToProps, { loginUser })(Login)

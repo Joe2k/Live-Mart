@@ -16,6 +16,8 @@ import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 // import ReactMapboxGl, { Layer, Feature, Marker, Image } from "react-mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import MapGL, { Marker, NavigationControl } from "react-map-gl";
@@ -102,6 +104,7 @@ class Register extends Component {
         longitude: -100,
       },
       events: {},
+      type: "Customer",
     };
   }
 
@@ -149,7 +152,8 @@ class Register extends Component {
   };
 
   onChange = (e) => {
-    this.setState({ [e.target.id]: e.target.value });
+    console.log(e.target);
+    this.setState({ [e.target.name]: e.target.value });
   };
   onSubmit = (e) => {
     e.preventDefault();
@@ -159,6 +163,7 @@ class Register extends Component {
       password: this.state.password,
       password2: this.state.password2,
       marker: this.state.marker,
+      type: this.state.type,
     };
     console.log(newUser);
     this.props.registerUser(newUser, this.props.history);
@@ -296,9 +301,33 @@ class Register extends Component {
                 </div>
               </MapGL>
 
-              <InputLabel style={{ marginTop: "20px" }}>
+              <InputLabel style={{ marginTop: "20px", marginBottom: "20px" }}>
                 Place The Marker At Your Location In The Map*
               </InputLabel>
+              <InputLabel
+                shrink
+                id="demo-simple-select-placeholder-label-label"
+              >
+                Select your type of usage
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-required-label"
+                id="type"
+                name="type"
+                value={this.state.type}
+                onChange={this.onChange}
+                style={{ width: "100%" }}
+              >
+                <MenuItem name="type" value="Customer">
+                  Customer
+                </MenuItem>
+                <MenuItem name="type" value="Retailer">
+                  Retailer
+                </MenuItem>
+                <MenuItem name="type" value="Wholesaler">
+                  Wholesaler
+                </MenuItem>
+              </Select>
 
               <Button
                 type="submit"
