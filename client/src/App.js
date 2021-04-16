@@ -1,5 +1,5 @@
 import "./App.css";
-import React from "react";
+import React, { useState } from "react";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import { setCurrentUser, logoutUser } from "./actions/authActions";
@@ -13,12 +13,10 @@ import Register from "./components/Auth/Register";
 import Login from "./components/Auth/Login";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/Dashboard/Dashboard";
-import ReactMapboxGl from "react-mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
-const Map = ReactMapboxGl({
-  accessToken:
-    "pk.eyJ1Ijoiam9lMmsiLCJhIjoiY2ttd2I2Zmx6MGRmaTJxcHE4bmw2Zzl5MCJ9.HGFYGNmE7qIORzu2nKAQ1w",
-});
+import { ThemeProvider } from "@material-ui/core";
+import { createMuiTheme } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { deepOrange, red } from "@material-ui/core/colors";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -39,7 +37,36 @@ if (localStorage.jwtToken) {
   }
 }
 
+// export const light = {
+//   palette: {
+//     type: "light",
+//     background: {
+//       default: "#fff",
+//     },
+//   },
+// };
+
+// export const dark = {
+//   palette: {
+//     type: "dark",
+//     primary: red,
+//     background: {
+//       default: "#303030",
+//     },
+//   },
+// };
+
 function App() {
+  // const [theme, setTheme] = useState(localStorage.getItem("theme") || true);
+
+  // // Icons imported from `@material-ui/icons`
+
+  // let appliedTheme = createMuiTheme(theme ? light : dark);
+  // React.useEffect(() => {
+  //   localStorage.setItem("theme", theme);
+  //   appliedTheme = createMuiTheme(theme ? light : dark);
+  // }, [theme]);
+
   return (
     <Provider store={store}>
       <div className="App">

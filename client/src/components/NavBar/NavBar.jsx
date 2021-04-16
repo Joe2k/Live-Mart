@@ -14,6 +14,13 @@ import RegisterIcon from "@material-ui/icons/ListAlt";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { logoutUser } from "../../actions/authActions";
+import logo from "../../resources/shopping-cart.png";
+import Brightness7Icon from "@material-ui/icons/Brightness7";
+import Brightness3Icon from "@material-ui/icons/Brightness3";
+import { CustomThemeContext } from "../../context/CustomThemeProvider";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -50,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Navbar() {
+function Navbar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -74,6 +81,10 @@ export default function Navbar() {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+  React.useEffect(() => {
+    console.log(props);
+  }, []);
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -145,35 +156,81 @@ export default function Navbar() {
       </MenuItem>
     </Menu>
   );
+  const { currentTheme, setTheme } = React.useContext(CustomThemeContext);
 
   return (
     <div className={classes.grow}>
       <AppBar position="static">
         <Toolbar>
-          <Typography className={classes.title} variant="h5" noWrap>
+          <Typography className={classes.title} variant="h6" noWrap>
             <Link color="inherit" underline="none" href="/">
+              <img
+                src={logo}
+                alt="logo"
+                style={{ width: "20px", marginRight: "10px" }}
+              />
               Live Mart
             </Link>
           </Typography>
 
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <Button color="inherit">
-              <Link color="inherit" underline="none" href="/login">
-                Login
-              </Link>
-            </Button>
+            {props.auth.isAuthenticated ? (
+              <>
+                <IconButton
+                  color="inherit"
+                  onClick={() => {
+                    if (currentTheme === "light") setTheme("dark");
+                    else setTheme("light");
+                  }}
+                >
+                  {currentTheme === "dark" ? (
+                    <Brightness7Icon />
+                  ) : (
+                    <Brightness3Icon />
+                  )}
+                </IconButton>
+                <IconButton
+                  aria-label="show 17 new notifications"
+                  color="inherit"
+                >
+                  <Badge badgeContent={17} color="secondary">
+                    <NotificationsIcon />
+                  </Badge>
+                </IconButton>
 
-            <Button color="inherit">
-              <Link color="inherit" underline="none" href="/register">
-                Register
-              </Link>
-            </Button>
+                <Button color="inherit" onClick={() => props.logoutUser()}>
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <IconButton
+                  color="inherit"
+                  onClick={() => {
+                    if (currentTheme === "light") setTheme("dark");
+                    else setTheme("light");
+                  }}
+                >
+                  {currentTheme === "dark" ? (
+                    <Brightness7Icon />
+                  ) : (
+                    <Brightness3Icon />
+                  )}
+                </IconButton>
+                <Button color="inherit">
+                  <Link color="inherit" underline="none" href="/login">
+                    Login
+                  </Link>
+                </Button>
+
+                <Button color="inherit">
+                  <Link color="inherit" underline="none" href="/register">
+                    Register
+                  </Link>
+                </Button>
+              </>
+            )}
           </div>
           <div className={classes.sectionMobile}>
             <IconButton
@@ -193,3 +250,14 @@ export default function Navbar() {
     </div>
   );
 }
+
+Navbar.propTypes = {
+  logoutUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+};
+
+const mapStateToprops = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToprops, { logoutUser })(Navbar);
