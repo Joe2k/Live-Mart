@@ -21,7 +21,12 @@ export const light = {
 export const dark = {
   palette: {
     type: "dark",
-    primary: red,
+    primary: {
+      main: "#ffac41",
+    },
+    secondary: {
+      main: "#e45826",
+    },
     background: {
       default: "#303030",
     },

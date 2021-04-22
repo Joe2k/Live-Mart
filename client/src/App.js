@@ -13,10 +13,9 @@ import Register from "./components/Auth/Register";
 import Login from "./components/Auth/Login";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/Dashboard/Dashboard";
-import { ThemeProvider } from "@material-ui/core";
-import { createMuiTheme } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { deepOrange, red } from "@material-ui/core/colors";
+import Vegetables from "./components/Vegetables/Vegetables";
+import Online from "./components/Online/Online";
+import Offline from "./Offline/Offline";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -37,36 +36,7 @@ if (localStorage.jwtToken) {
   }
 }
 
-// export const light = {
-//   palette: {
-//     type: "light",
-//     background: {
-//       default: "#fff",
-//     },
-//   },
-// };
-
-// export const dark = {
-//   palette: {
-//     type: "dark",
-//     primary: red,
-//     background: {
-//       default: "#303030",
-//     },
-//   },
-// };
-
 function App() {
-  // const [theme, setTheme] = useState(localStorage.getItem("theme") || true);
-
-  // // Icons imported from `@material-ui/icons`
-
-  // let appliedTheme = createMuiTheme(theme ? light : dark);
-  // React.useEffect(() => {
-  //   localStorage.setItem("theme", theme);
-  //   appliedTheme = createMuiTheme(theme ? light : dark);
-  // }, [theme]);
-
   return (
     <Provider store={store}>
       <div className="App">
@@ -77,6 +47,9 @@ function App() {
           <Route exact path="/login" component={Login} />
           <Switch>
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
+            <PrivateRoute exact path="/vegetables" component={Vegetables} />
+            <PrivateRoute exact path="/online" component={Online} />
+            <PrivateRoute exact path="/offline" component={Offline} />
           </Switch>
         </Router>
       </div>
