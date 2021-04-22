@@ -26,8 +26,11 @@ const ItemSchema = new Schema({
   url: {
     type: String,
   },
+  category: {
+    type: String,
+  },
   soldBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  boughtBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  boughtBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 ItemSchema.pre(/^find/, function (next) {

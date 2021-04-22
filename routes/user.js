@@ -86,6 +86,8 @@ router.post("/login", (req, res) => {
             const payload = {
               id: user.id,
               name: user.name,
+              location: user.location,
+              type: user.type,
             };
             // Sign token
             jwt.sign(
@@ -125,6 +127,7 @@ router.post("/login", (req, res) => {
           // User matched
           // Create JWT Payload
           var otp = Math.floor(1000 + Math.random() * 9000);
+          console.log(otp);
 
           const msg = {
             to: user.email, // Change to your recipient
@@ -133,17 +136,15 @@ router.post("/login", (req, res) => {
             html: `<h3>Live Mart Login</h3><p>Your login OTP is <strong>${otp}</strong></p>`,
           };
 
-          console.log(msg);
-
-          sgMail
-            .send(msg)
-            .then((response) => {
-              console.log(response[0].statusCode);
-              console.log(response[0].headers);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
+          // sgMail
+          //   .send(msg)
+          //   .then((response) => {
+          //     console.log(response[0].statusCode);
+          //     console.log(response[0].headers);
+          //   })
+          //   .catch((error) => {
+          //     console.error(error);
+          //   });
 
           User.findOneAndUpdate({ email }, { otp: otp }, (err, doc) => {
             if (err) console.log(err);

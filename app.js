@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 const users = require("./routes/user");
+const items = require("./routes/item");
 
 const app = express();
 
@@ -23,6 +24,9 @@ mongoose
   .then(() => console.log("MongoDB successfully connected"))
   .catch((err) => console.log(err));
 
+// Cloudinary Config
+require("./config/cloudinary")();
+
 // Passport middleware
 app.use(passport.initialize());
 // Passport config
@@ -30,6 +34,7 @@ require("./config/passport")(passport);
 
 // Routes
 app.use("/api/users", users);
+app.use("/api/items", items);
 
 const port = process.env.PORT || 5000;
 
