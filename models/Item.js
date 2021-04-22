@@ -23,6 +23,9 @@ const ItemSchema = new Schema({
   type: {
     type: String,
   },
+  url: {
+    type: String,
+  },
   soldBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   boughtBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
