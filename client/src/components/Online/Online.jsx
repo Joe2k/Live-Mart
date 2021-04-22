@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
@@ -10,6 +10,11 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import "mapbox-gl/dist/mapbox-gl.css";
+import MapGL, { Marker, NavigationControl } from "react-map-gl";
+import Pin from "../Map/Pin";
+
+const { mapboxToken } = require("../../config");
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,8 +57,26 @@ const GreenTextTypography = withStyles({
   },
 })(Typography);
 
+const navStyle = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  padding: "10px",
+};
+
 function Online() {
   const classes = useStyles();
+  const [viewPort, setViewPort] = useState({
+    longitude: 80.186224,
+    latitude: 13.102343,
+    zoom: 17,
+    bearing: 0,
+    pitch: 0,
+  });
+  const [marker, setMarker] = useState({
+    longitude: 80.186224,
+    latitude: 13.102343,
+  });
   return (
     <Container className={classes.container}>
       <Grid container spacing={3}>
@@ -67,7 +90,7 @@ function Online() {
             Buy Online
           </Typography>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Card className={classes.root}>
             <CardActionArea>
               <CardMedia
@@ -78,7 +101,7 @@ function Online() {
             </CardActionArea>
           </Card>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Card className={classes.root}>
             <CardActionArea>
               <CardContent className={classes.CardContent}>
@@ -126,6 +149,41 @@ function Online() {
               </CardContent>
             </CardActionArea>
           </Card>
+          <Typography
+            style={{ marginTop: "30px", marginBottom: "10px" }}
+            align="center"
+            variant="subtitle1"
+            color="textPrimary"
+            component="h4"
+          >
+            Shop Location
+          </Typography>
+          <MapGL
+            {...viewPort}
+            width="25vw"
+            height="25vh"
+            mapStyle="mapbox://styles/mapbox/streets-v11"
+            onViewportChange={(viewport) => setViewPort(viewport)}
+            mapboxApiAccessToken={mapboxToken}
+          >
+            <Marker
+              longitude={marker.longitude}
+              latitude={marker.latitude}
+              offsetTop={-20}
+              offsetLeft={-10}
+            >
+              <Typography variant="body2" color="textSecondary" component="p">
+                Shop Name
+              </Typography>
+              <Pin size={20} />
+            </Marker>
+
+            <div className="nav" style={navStyle}>
+              <NavigationControl />
+            </div>
+          </MapGL>
+        </Grid>
+        <Grid item xs={4}>
           <form className={classes.form} noValidate autoComplete="off">
             <TextField
               id="standard-number"

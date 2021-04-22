@@ -10,6 +10,11 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import "mapbox-gl/dist/mapbox-gl.css";
+import MapGL, { Marker, NavigationControl } from "react-map-gl";
+import Pin from "../Map/Pin";
+
+const { mapboxToken } = require("../../config");
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,6 +51,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const navStyle = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  padding: "10px",
+};
+
 const GreenTextTypography = withStyles({
   root: {
     color: "#00a152",
@@ -63,6 +75,24 @@ function Offline() {
 
   //     return currentDate.getTime() < selectedDate.getTime();
   //   };
+  const [curTime, setCurTime] = useState("");
+  const [viewPort, setViewPort] = useState({
+    longitude: 80.186224,
+    latitude: 13.102343,
+    zoom: 17,
+    bearing: 0,
+    pitch: 0,
+  });
+  const [marker, setMarker] = useState({
+    longitude: 80.186224,
+    latitude: 13.102343,
+  });
+
+  React.useEffect(() => {
+    var now = new Date();
+    setCurTime(now.toLocaleString());
+  });
+
   return (
     <Container className={classes.container}>
       <Grid container spacing={3}>
@@ -76,7 +106,7 @@ function Offline() {
             Buy Offline
           </Typography>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Card className={classes.root}>
             <CardActionArea>
               <CardMedia
@@ -87,7 +117,7 @@ function Offline() {
             </CardActionArea>
           </Card>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Card className={classes.root}>
             <CardActionArea>
               <CardContent className={classes.CardContent}>
@@ -135,6 +165,41 @@ function Offline() {
               </CardContent>
             </CardActionArea>
           </Card>
+          <Typography
+            style={{ marginTop: "30px", marginBottom: "10px" }}
+            align="center"
+            variant="subtitle1"
+            color="textPrimary"
+            component="h4"
+          >
+            Shop Location
+          </Typography>
+          <MapGL
+            {...viewPort}
+            width="25vw"
+            height="25vh"
+            mapStyle="mapbox://styles/mapbox/streets-v11"
+            onViewportChange={(viewport) => setViewPort(viewport)}
+            mapboxApiAccessToken={mapboxToken}
+          >
+            <Marker
+              longitude={marker.longitude}
+              latitude={marker.latitude}
+              offsetTop={-20}
+              offsetLeft={-10}
+            >
+              <Typography variant="body2" color="textSecondary" component="p">
+                Shop Name
+              </Typography>
+              <Pin size={20} />
+            </Marker>
+
+            <div className="nav" style={navStyle}>
+              <NavigationControl />
+            </div>
+          </MapGL>
+        </Grid>
+        <Grid item xs={4}>
           <form className={classes.form} noValidate autoComplete="off">
             <TextField
               id="standard-number"
@@ -142,6 +207,18 @@ function Offline() {
               variant="outlined"
               type="number"
               fullWidth
+            />
+            <TextField
+              id="datetime-local"
+              label="Date and Time"
+              type="datetime-local"
+              defaultValue={curTime}
+              variant="outlined"
+              fullWidth
+              className={classes.textField}
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
             <Button variant="contained" color="primary" fullWidth>
               Buy Offline

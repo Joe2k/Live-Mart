@@ -15,7 +15,7 @@ import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Vegetables from "./components/Vegetables/Vegetables";
 import Online from "./components/Online/Online";
-import Offline from "./Offline/Offline";
+import Offline from "./components/Offline/Offline";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
