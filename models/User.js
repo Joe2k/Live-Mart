@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+
 // Create Schema
 const UserSchema = new Schema({
   name: {
@@ -32,5 +33,14 @@ const UserSchema = new Schema({
   type: {
     type: String,
   },
+  sellingItems: [{ type: mongoose.Schema.Types.ObjectId, ref: "Item" }],
+  boughtItems: [{ type: mongoose.Schema.Types.ObjectId, ref: "Item" }],
 });
-module.exports = User = mongoose.model("users", UserSchema);
+
+UserSchema.pre(/^find/, function (next) {
+  this.populate("sellingItems");
+  this.populate("boughtItems");
+  next();
+});
+
+module.exports = User = mongoose.model("User", UserSchema);
