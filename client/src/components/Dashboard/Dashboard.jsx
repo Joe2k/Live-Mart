@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles({
   root: {
@@ -50,9 +51,11 @@ function Dashboard() {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" color="primary">
-            Buy
-          </Button>
+          <Link href="/vegetables" underline="none">
+            <Button size="small" color="primary">
+              Buy
+            </Button>
+          </Link>
         </CardActions>
       </Card>
       <Card className={classes.root}>

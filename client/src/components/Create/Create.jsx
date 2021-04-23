@@ -10,6 +10,12 @@ import Container from "@material-ui/core/Container";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import axios from "axios";
+import {
+  CircularProgress,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -42,7 +48,10 @@ function Create(props) {
     location: { longitude: 0, latitude: 0 },
     type: "",
     soldBy: "",
+    category: "",
   });
+  const [err, setErr] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     console.log(props);
@@ -65,7 +74,20 @@ function Create(props) {
 
   const handleSubmit = async (event) => {
     try {
+      setLoading(true);
       event.preventDefault();
+      if (
+        item.name === "" ||
+        item.quantity === "" ||
+        item.cost === "" ||
+        currentFile === undefined
+      ) {
+        setErr("All the fields are required");
+        return setLoading(false);
+      } else if (item.cost <= 0 && item.quantity <= 0) {
+        setErr("Cost and Quantity should be positive");
+        return setLoading(false);
+      }
       const form = new FormData();
       form.append("name", item.name);
       form.append("cost", item.cost);
@@ -75,14 +97,17 @@ function Create(props) {
       form.append("type", item.type);
       form.append("photo", currentFile);
       form.append("soldBy", item.soldBy);
+      form.append("category", item.category);
 
       const resp = await axios.post("/api/items/create", form);
       //console.log(resp);
       if (resp.status === 200) {
         props.history.push("/dashboard");
       }
+      return setLoading(false);
     } catch (e) {
       console.log(e);
+      return setLoading(false);
     }
   };
   return (
@@ -94,6 +119,9 @@ function Create(props) {
         </Avatar>
         <Typography component="h1" variant="h5">
           Add a new item
+        </Typography>
+        <Typography component="p" variant="p" color="error">
+          {err}
         </Typography>
         <form className={classes.form}>
           <TextField
@@ -108,6 +136,19 @@ function Create(props) {
             autoFocus
             onChange={onChange}
           />
+          <InputLabel id="demo-simple-select-label">Category</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            name="category"
+            value={item.category}
+            onChange={onChange}
+            fullWidth
+          >
+            <MenuItem value={"Vegetables"}>Vegetables</MenuItem>
+            <MenuItem value={"Fruits"}>Fruits</MenuItem>
+            <MenuItem value={"Grocery"}>Grocery</MenuItem>
+          </Select>
           <TextField
             variant="outlined"
             margin="normal"
@@ -162,8 +203,10 @@ function Create(props) {
             color="primary"
             className={classes.submit}
             onClick={handleSubmit}
+            disabled={loading}
           >
-            Add Item
+            {loading && <CircularProgress size={24} />}
+            {!loading && "Add Item"}
           </Button>
         </form>
       </div>

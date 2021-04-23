@@ -33,10 +33,10 @@ const ItemSchema = new Schema({
   boughtBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
-ItemSchema.pre(/^find/, function (next) {
-  this.populate("soldBy");
-  this.populate("boughtBy");
-  next();
-});
+// ItemSchema.pre("find", function (next) {
+//   this.populate("soldBy");
+//   //   this.populate("boughtBy");
+//   next();
+// });
 
 module.exports = Item = mongoose.model("Item", ItemSchema);

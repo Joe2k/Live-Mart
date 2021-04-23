@@ -29,7 +29,6 @@ router.post("/create", upload.single("photo"), async (req, res) => {
         ...req.body,
         url: result.url,
         boughtBy: [],
-        category: "Vegetables",
       });
       User.findByIdAndUpdate(req.body.soldBy, {
         $push: { sellingItems: mongoose.Types.ObjectId(item.id) },
@@ -38,6 +37,12 @@ router.post("/create", upload.single("photo"), async (req, res) => {
       return res.status(200).json(item);
     }
   });
+});
+
+router.get("/all", (req, res) => {
+  Item.find({})
+    .populate("soldBy")
+    .exec((err, docs) => res.json(docs));
 });
 
 module.exports = router;

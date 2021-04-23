@@ -23,6 +23,7 @@ mongoose
   })
   .then(() => console.log("MongoDB successfully connected"))
   .catch((err) => console.log(err));
+require("./models/User");
 
 // Cloudinary Config
 require("./config/cloudinary")();
