@@ -49,8 +49,8 @@ function App() {
           <Switch>
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <PrivateRoute exact path="/vegetables" component={Vegetables} />
-            <PrivateRoute exact path="/online" component={Online} />
-            <PrivateRoute exact path="/offline" component={Offline} />
+            <PrivateRoute exact path="/online/:id" component={Online} />
+            <PrivateRoute exact path="/offline/:id" component={Offline} />
             <PrivateRoute exact path="/create" component={Create} />
           </Switch>
         </Router>

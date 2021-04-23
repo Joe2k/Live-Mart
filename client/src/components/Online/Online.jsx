@@ -13,6 +13,11 @@ import Button from "@material-ui/core/Button";
 import "mapbox-gl/dist/mapbox-gl.css";
 import MapGL, { Marker, NavigationControl } from "react-map-gl";
 import Pin from "../Map/Pin";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import getDistance from "../../utils/getDistance";
+import { useParams } from "react-router";
+import axios from "axios";
 
 const { mapboxToken } = require("../../config");
 
@@ -64,8 +69,10 @@ const navStyle = {
   padding: "10px",
 };
 
-function Online() {
+function Online(props) {
   const classes = useStyles();
+
+  const { id } = useParams();
   const [viewPort, setViewPort] = useState({
     longitude: 80.186224,
     latitude: 13.102343,
@@ -77,6 +84,30 @@ function Online() {
     longitude: 80.186224,
     latitude: 13.102343,
   });
+  const [item, setItem] = useState({});
+
+  React.useEffect(() => {
+    axios.get("/api/items/one/" + id).then((resp) => {
+      let { data } = resp;
+      data = {
+        ...data,
+        distance: getDistance(
+          props.auth.user.location.latitude,
+          props.auth.user.location.longitude,
+          data.location.latitude,
+          data.location.longitude
+        ),
+      };
+      setItem(data);
+      setMarker(data.location);
+      setViewPort({
+        ...viewPort,
+        longitude: data.location.longitude,
+        latitude: data.location.latitude,
+      });
+    });
+  }, []);
+
   return (
     <Container className={classes.container}>
       <Grid container spacing={3}>
@@ -95,7 +126,7 @@ function Online() {
             <CardActionArea>
               <CardMedia
                 className={classes.media}
-                image="https://solidstarts.com/wp-content/uploads/Broccoli_edited-480x320.jpg"
+                image={item.url}
                 title="Vegetables"
               />
             </CardActionArea>
@@ -108,12 +139,12 @@ function Online() {
                 <Grid container spacing={0}>
                   <Grid item xs={12}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Broccoli
+                      {item.name}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="body2" color="primary" component="p">
-                      Cost : Rs. 200
+                      Cost : Rs. {item.cost}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
@@ -132,7 +163,7 @@ function Online() {
                       color="textSecondary"
                       component="p"
                     >
-                      Quantity Availabe : 16
+                      Quantity Availabe : {item.quantity}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
@@ -142,7 +173,7 @@ function Online() {
                       component="p"
                       align="right"
                     >
-                      Distance : 5 km
+                      Distance : {item.distance} km
                     </Typography>
                   </Grid>
                 </Grid>
@@ -173,7 +204,7 @@ function Online() {
               offsetLeft={-10}
             >
               <Typography variant="body2" color="textSecondary" component="p">
-                Shop Name
+                {item.soldBy && item.soldBy.name}
               </Typography>
               <Pin size={20} />
             </Marker>
@@ -202,4 +233,12 @@ function Online() {
   );
 }
 
-export default Online;
+Online.propTypes = {
+  auth: PropTypes.object.isRequired,
+};
+
+const mapStateToprops = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToprops)(Online);

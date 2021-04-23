@@ -14,6 +14,7 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import getDistance from "../../utils/getDistance";
+import { Link } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
@@ -77,7 +78,6 @@ function Vegetables(props) {
 
         arr[i] = { ...d, distance: newDistance };
       });
-      console.log(data);
       setItems(data);
       setDisplayItems(data);
     });
@@ -188,12 +188,17 @@ function Vegetables(props) {
           <CardActions>
             {item.quantity > 0 ? (
               <>
-                <Button size="small" color="primary">
-                  Buy Online
-                </Button>
-                <Button size="small" color="secondary">
-                  Buy Offline
-                </Button>
+                <Link href={"/online/" + item._id} underline="none">
+                  <Button size="small" color="primary">
+                    Buy Online
+                  </Button>
+                </Link>
+
+                <Link href={"/offline/" + item._id} underline="none">
+                  <Button size="small" color="secondary">
+                    Buy Offline
+                  </Button>
+                </Link>
               </>
             ) : (
               <>

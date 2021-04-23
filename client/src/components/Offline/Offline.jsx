@@ -13,6 +13,12 @@ import Button from "@material-ui/core/Button";
 import "mapbox-gl/dist/mapbox-gl.css";
 import MapGL, { Marker, NavigationControl } from "react-map-gl";
 import Pin from "../Map/Pin";
+import { useParams } from "react-router";
+import axios from "axios";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import getDistance from "../../utils/getDistance";
+import { CustomThemeContext } from "../../context/CustomThemeProvider";
 
 const { mapboxToken } = require("../../config");
 
@@ -46,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   form: {
     "& .MuiTextField-root": {
       margin: theme.spacing(3),
-      width: "50%",
+      width: "80%",
     },
   },
 }));
@@ -64,17 +70,10 @@ const GreenTextTypography = withStyles({
   },
 })(Typography);
 
-function Offline() {
+function Offline(props) {
   const classes = useStyles();
-  //   const [startDate, setStartDate] = useState(
-  //     setHours(setMinutes(new Date(), 0), 9)
-  //   );
-  //   const filterPassedTime = (time) => {
-  //     const currentDate = new Date();
-  //     const selectedDate = new Date(time);
 
-  //     return currentDate.getTime() < selectedDate.getTime();
-  //   };
+  const { id } = useParams();
   const [curTime, setCurTime] = useState("");
   const [viewPort, setViewPort] = useState({
     longitude: 80.186224,
@@ -87,15 +86,48 @@ function Offline() {
     longitude: 80.186224,
     latitude: 13.102343,
   });
+  const [item, setItem] = useState({});
+  const [form, setForm] = useState({ quantity: 0, date: "" });
+  const { currentTheme, setTheme } = React.useContext(CustomThemeContext);
+  const [mapStyle, setMapStyle] = useState(
+    "mapbox://styles/mapbox/streets-v11"
+  );
 
   React.useEffect(() => {
     var now = new Date();
+    console.log(currentTheme);
     setCurTime(now.toLocaleString());
-  });
+    setForm({ ...form, date: now.toLocaleString() });
+    axios.get("/api/items/one/" + id).then((resp) => {
+      let { data } = resp;
+      data = {
+        ...data,
+        distance: getDistance(
+          props.auth.user.location.latitude,
+          props.auth.user.location.longitude,
+          data.location.latitude,
+          data.location.longitude
+        ),
+      };
+      setItem(data);
+      setMarker(data.location);
+      setViewPort({
+        ...viewPort,
+        longitude: data.location.longitude,
+        latitude: data.location.latitude,
+      });
+    });
+  }, []);
+
+  React.useEffect(() => {
+    if (currentTheme === "light")
+      setMapStyle("mapbox://styles/mapbox/streets-v11");
+    else setMapStyle("mapbox://styles/mapbox/dark-v9");
+  }, [currentTheme]);
 
   return (
     <Container className={classes.container}>
-      <Grid container spacing={3}>
+      <Grid container spacing={1}>
         <Grid item xs={12}>
           <Typography
             className={classes.heading}
@@ -111,7 +143,7 @@ function Offline() {
             <CardActionArea>
               <CardMedia
                 className={classes.media}
-                image="https://solidstarts.com/wp-content/uploads/Broccoli_edited-480x320.jpg"
+                image={item.url}
                 title="Vegetables"
               />
             </CardActionArea>
@@ -124,12 +156,12 @@ function Offline() {
                 <Grid container spacing={0}>
                   <Grid item xs={12}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Broccoli
+                      {item.name}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="body2" color="primary" component="p">
-                      Cost : Rs. 200
+                      Cost : Rs. {item.cost}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
@@ -148,7 +180,7 @@ function Offline() {
                       color="textSecondary"
                       component="p"
                     >
-                      Quantity Availabe : 16
+                      Quantity Availabe : {item.quantity}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
@@ -158,7 +190,7 @@ function Offline() {
                       component="p"
                       align="right"
                     >
-                      Distance : 5 km
+                      Distance : {item.distance} km
                     </Typography>
                   </Grid>
                 </Grid>
@@ -178,7 +210,7 @@ function Offline() {
             {...viewPort}
             width="25vw"
             height="25vh"
-            mapStyle="mapbox://styles/mapbox/streets-v11"
+            mapStyle={mapStyle}
             onViewportChange={(viewport) => setViewPort(viewport)}
             mapboxApiAccessToken={mapboxToken}
           >
@@ -189,7 +221,7 @@ function Offline() {
               offsetLeft={-10}
             >
               <Typography variant="body2" color="textSecondary" component="p">
-                Shop Name
+                {item.soldBy && item.soldBy.name}
               </Typography>
               <Pin size={20} />
             </Marker>
@@ -207,12 +239,19 @@ function Offline() {
               variant="outlined"
               type="number"
               fullWidth
+              value={form.quantity}
+              onChange={(event) =>
+                setForm({ ...form, quantity: event.target.value })
+              }
             />
             <TextField
-              id="datetime-local"
+              id="date"
               label="Date and Time"
               type="datetime-local"
-              defaultValue={curTime}
+              onChange={(event) =>
+                setForm({ ...form, date: event.target.value })
+              }
+              value={form.date}
               variant="outlined"
               fullWidth
               className={classes.textField}
@@ -230,4 +269,12 @@ function Offline() {
   );
 }
 
-export default Offline;
+Offline.propTypes = {
+  auth: PropTypes.object.isRequired,
+};
+
+const mapStateToprops = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToprops)(Offline);

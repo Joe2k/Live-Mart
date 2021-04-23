@@ -45,4 +45,10 @@ router.get("/all", (req, res) => {
     .exec((err, docs) => res.json(docs));
 });
 
+router.get("/one/:id", (req, res) => {
+  Item.findById(req.params.id)
+    .populate("soldBy")
+    .exec((err, docs) => res.json(docs));
+});
+
 module.exports = router;
