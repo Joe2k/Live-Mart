@@ -18,6 +18,7 @@ import { connect } from "react-redux";
 import getDistance from "../../utils/getDistance";
 import { useParams } from "react-router";
 import axios from "axios";
+import { CustomThemeContext } from "../../context/CustomThemeProvider";
 
 const { mapboxToken } = require("../../config");
 
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   form: {
     "& .MuiTextField-root": {
       margin: theme.spacing(3),
-      width: "50%",
+      width: "70%",
     },
   },
 }));
@@ -107,6 +108,16 @@ function Online(props) {
       });
     });
   }, []);
+  const { currentTheme, setTheme } = React.useContext(CustomThemeContext);
+  const [mapStyle, setMapStyle] = useState(
+    "mapbox://styles/mapbox/streets-v11"
+  );
+
+  React.useEffect(() => {
+    if (currentTheme === "light")
+      setMapStyle("mapbox://styles/mapbox/streets-v11");
+    else setMapStyle("mapbox://styles/mapbox/dark-v9");
+  }, [currentTheme]);
 
   return (
     <Container className={classes.container}>
@@ -193,7 +204,7 @@ function Online(props) {
             {...viewPort}
             width="25vw"
             height="25vh"
-            mapStyle="mapbox://styles/mapbox/streets-v11"
+            mapStyle={mapStyle}
             onViewportChange={(viewport) => setViewPort(viewport)}
             mapboxApiAccessToken={mapboxToken}
           >

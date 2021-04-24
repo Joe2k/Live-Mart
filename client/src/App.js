@@ -17,6 +17,8 @@ import Vegetables from "./components/Vegetables/Vegetables";
 import Online from "./components/Online/Online";
 import Offline from "./components/Offline/Offline";
 import Create from "./components/Create/Create";
+import Fruits from "./components/Fruits/Fruits";
+import Grocery from "./components/Grocery/Grocery";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -49,6 +51,8 @@ function App() {
           <Switch>
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <PrivateRoute exact path="/vegetables" component={Vegetables} />
+            <PrivateRoute exact path="/fruits" component={Fruits} />
+            <PrivateRoute exact path="/grocery" component={Grocery} />
             <PrivateRoute exact path="/online/:id" component={Online} />
             <PrivateRoute exact path="/offline/:id" component={Offline} />
             <PrivateRoute exact path="/create" component={Create} />

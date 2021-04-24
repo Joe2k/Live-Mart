@@ -87,7 +87,7 @@ function Offline(props) {
     latitude: 13.102343,
   });
   const [item, setItem] = useState({});
-  const [form, setForm] = useState({ quantity: 0, date: "" });
+  const [form, setForm] = useState({ date: "" });
   const { currentTheme, setTheme } = React.useContext(CustomThemeContext);
   const [mapStyle, setMapStyle] = useState(
     "mapbox://styles/mapbox/streets-v11"
@@ -124,6 +124,15 @@ function Offline(props) {
       setMapStyle("mapbox://styles/mapbox/streets-v11");
     else setMapStyle("mapbox://styles/mapbox/dark-v9");
   }, [currentTheme]);
+
+  const handleSubmit = () => {
+    let submitForm = { ...form, itemId: id, userId: props.auth.user.id };
+
+    axios.post("/api/orders/offline", submitForm).then((resp) => {
+      console.log(resp.data);
+      props.history.push("/dashboard");
+    });
+  };
 
   return (
     <Container className={classes.container}>
@@ -234,17 +243,6 @@ function Offline(props) {
         <Grid item xs={4}>
           <form className={classes.form} noValidate autoComplete="off">
             <TextField
-              id="standard-number"
-              label="Quantity"
-              variant="outlined"
-              type="number"
-              fullWidth
-              value={form.quantity}
-              onChange={(event) =>
-                setForm({ ...form, quantity: event.target.value })
-              }
-            />
-            <TextField
               id="date"
               label="Date and Time"
               type="datetime-local"
@@ -259,7 +257,12 @@ function Offline(props) {
                 shrink: true,
               }}
             />
-            <Button variant="contained" color="primary" fullWidth>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={handleSubmit}
+            >
               Buy Offline
             </Button>
           </form>

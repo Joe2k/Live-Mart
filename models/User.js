@@ -35,12 +35,20 @@ const UserSchema = new Schema({
   },
   sellingItems: [{ type: mongoose.Schema.Types.ObjectId, ref: "Item" }],
   boughtItems: [{ type: mongoose.Schema.Types.ObjectId, ref: "Item" }],
-});
-
-UserSchema.pre(/^find/, function (next) {
-  this.populate("sellingItems");
-  this.populate("boughtItems");
-  next();
+  sellingEvents: [
+    {
+      time: { type: String },
+      buyer: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      item: { type: mongoose.Schema.Types.ObjectId, ref: "Item" },
+    },
+  ],
+  buyingEvents: [
+    {
+      time: { type: String },
+      seller: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      item: { type: mongoose.Schema.Types.ObjectId, ref: "Item" },
+    },
+  ],
 });
 
 module.exports = User = mongoose.model("User", UserSchema);

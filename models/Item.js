@@ -31,6 +31,7 @@ const ItemSchema = new Schema({
   },
   soldBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   boughtBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+ 
 });
 
 // ItemSchema.pre("find", function (next) {

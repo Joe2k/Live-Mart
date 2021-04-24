@@ -77,9 +77,11 @@ function Dashboard() {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" color="primary">
-            Buy
-          </Button>
+          <Link href="/fruits" underline="none">
+            <Button size="small" color="primary">
+              Buy
+            </Button>
+          </Link>
         </CardActions>
       </Card>
       <Card className={classes.root}>
@@ -100,9 +102,11 @@ function Dashboard() {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" color="primary">
-            Buy
-          </Button>
+          <Link href="/grocery" underline="none">
+            <Button size="small" color="primary">
+              Buy
+            </Button>
+          </Link>
         </CardActions>
       </Card>
     </Container>
