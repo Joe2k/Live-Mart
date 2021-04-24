@@ -102,7 +102,7 @@ function Create(props) {
       const resp = await axios.post("/api/items/create", form);
       //console.log(resp);
       if (resp.status === 200) {
-        props.history.push("/dashboard");
+        props.history.push("/");
       }
       return setLoading(false);
     } catch (e) {

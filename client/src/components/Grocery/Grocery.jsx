@@ -65,7 +65,15 @@ function Grocery(props) {
   useEffect(() => {
     axios.get("/api/items/all").then((resp) => {
       let { data } = resp;
-      data = data.filter((i) => i.category === "Grocery");
+      if (props.auth.user.type === "Customer") {
+        data = data.filter(
+          (i) => i.category === "Grocery" && i.type === "Retailer"
+        );
+      } else {
+        data = data.filter(
+          (i) => i.category === "Grocery" && i.type === "Wholesaler"
+        );
+      }
       //console.log(data);
       //console.log(props.auth.user.location);
       data.forEach((d, i, arr) => {

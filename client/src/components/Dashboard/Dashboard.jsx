@@ -27,88 +27,125 @@ const useStyles = makeStyles({
   },
 });
 
-function Dashboard() {
+function Dashboard(props) {
   const classes = useStyles();
 
   return (
     <Container className={classes.container}>
-      <Card className={classes.root}>
-        <CardActionArea>
-          <CardMedia
-            className={classes.media}
-            image="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/shopping-bag-full-of-fresh-vegetables-and-fruits-royalty-free-image-1128687123-1564523576.jpg"
-            title="Vegetables"
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              Vegetables
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              Vegetables are well-known for being good for your health. Most
-              vegetables are low in calories but high in vitamins, minerals and
-              fiber.
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-        <CardActions>
-          <Link href="/vegetables" underline="none">
-            <Button size="small" color="primary">
-              Buy
-            </Button>
-          </Link>
-        </CardActions>
-      </Card>
-      <Card className={classes.root}>
-        <CardActionArea>
-          <CardMedia
-            className={classes.media}
-            image="https://veggiedesserts.com/wp-content/uploads/2018/07/Fruit-Platter-sq.jpg"
-            title="Fruits"
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              Fruits
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              Fruits are an excellent source of essential vitamins and minerals,
-              and they are high in fiber. Fruits also provide a wide range of
-              antioxidants
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-        <CardActions>
-          <Link href="/fruits" underline="none">
-            <Button size="small" color="primary">
-              Buy
-            </Button>
-          </Link>
-        </CardActions>
-      </Card>
-      <Card className={classes.root}>
-        <CardActionArea>
-          <CardMedia
-            className={classes.media}
-            image="https://thumbor.forbes.com/thumbor/fit-in/1200x0/filters%3Aformat%28jpg%29/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F1141999659%2F0x0.jpg"
-            title="Grocery"
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              Grocery
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              Get all the other food items you would need such as flour, sugar,
-              tinned foods and all the household requirements
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-        <CardActions>
-          <Link href="/grocery" underline="none">
-            <Button size="small" color="primary">
-              Buy
-            </Button>
-          </Link>
-        </CardActions>
-      </Card>
+      {props.auth.user.type !== "Wholesaler" && (
+        <>
+          <Typography
+            className={classes.heading}
+            gutterBottom
+            variant="h2"
+            component="h2"
+            align="center"
+          >
+            Buy
+          </Typography>
+          <Card className={classes.root}>
+            <CardActionArea>
+              <CardMedia
+                className={classes.media}
+                image="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/shopping-bag-full-of-fresh-vegetables-and-fruits-royalty-free-image-1128687123-1564523576.jpg"
+                title="Vegetables"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  Vegetables
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Vegetables are well-known for being good for your health. Most
+                  vegetables are low in calories but high in vitamins, minerals
+                  and fiber.
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+            <CardActions>
+              <Link href="/vegetables" underline="none">
+                <Button size="small" color="primary">
+                  Buy
+                </Button>
+              </Link>
+            </CardActions>
+          </Card>
+          <Card className={classes.root}>
+            <CardActionArea>
+              <CardMedia
+                className={classes.media}
+                image="https://veggiedesserts.com/wp-content/uploads/2018/07/Fruit-Platter-sq.jpg"
+                title="Fruits"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  Fruits
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Fruits are an excellent source of essential vitamins and
+                  minerals, and they are high in fiber. Fruits also provide a
+                  wide range of antioxidants
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+            <CardActions>
+              <Link href="/fruits" underline="none">
+                <Button size="small" color="primary">
+                  Buy
+                </Button>
+              </Link>
+            </CardActions>
+          </Card>
+          <Card className={classes.root}>
+            <CardActionArea>
+              <CardMedia
+                className={classes.media}
+                image="https://thumbor.forbes.com/thumbor/fit-in/1200x0/filters%3Aformat%28jpg%29/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F1141999659%2F0x0.jpg"
+                title="Grocery"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  Grocery
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Get all the other food items you would need such as flour,
+                  sugar, tinned foods and all the household requirements
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+            <CardActions>
+              <Link href="/grocery" underline="none">
+                <Button size="small" color="primary">
+                  Buy
+                </Button>
+              </Link>
+            </CardActions>
+          </Card>
+        </>
+      )}
+
+      {props.auth.user.type !== "Customer" && (
+        <>
+          <Typography
+            className={classes.heading}
+            gutterBottom
+            variant="h2"
+            component="h2"
+            align="center"
+          >
+            Sell
+          </Typography>
+          <Button
+            variant="contained"
+            href="/create"
+            size="small"
+            color="primary"
+            fullWidth
+            style={{ marginBottom: 20 }}
+          >
+            Add Item
+          </Button>
+        </>
+      )}
     </Container>
   );
 }

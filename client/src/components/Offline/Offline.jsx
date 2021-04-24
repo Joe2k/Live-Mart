@@ -130,7 +130,7 @@ function Offline(props) {
 
     axios.post("/api/orders/offline", submitForm).then((resp) => {
       console.log(resp.data);
-      props.history.push("/dashboard");
+      props.history.push("/events");
     });
   };
 

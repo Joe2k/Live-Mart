@@ -63,43 +63,20 @@ function Vegetables(props) {
   const [displayItems, setDisplayItems] = useState([]);
 
   useEffect(() => {
-    axios.get("/api/items/all").then((resp) => {
+    axios.get("/api/orders/all").then((resp) => {
       let { data } = resp;
-      if (props.auth.user.type === "Customer") {
-        data = data.filter(
-          (i) => i.category === "Vegetables" && i.type === "Retailer"
-        );
-      } else {
-        data = data.filter(
-          (i) => i.category === "Vegetables" && i.type === "Wholesaler"
-        );
-      }
-      //console.log(data);
-      //console.log(props.auth.user.location);
-      data.forEach((d, i, arr) => {
-        let newDistance = getDistance(
-          props.auth.user.location.latitude,
-          props.auth.user.location.longitude,
-          d.location.latitude,
-          d.location.longitude
-        );
-
-        arr[i] = { ...d, distance: newDistance };
-      });
-      setItems(data);
+      console.log(data);
+      data.filter((d) => d.status !== "Delivered");
       setDisplayItems(data);
     });
   }, []);
 
-  const handleSearch = (newValue = search) => {
-    setSearch(newValue);
-    setDisplayItems(
-      items.filter(
-        (item) =>
-          item.name.toLowerCase().includes(newValue) ||
-          item.soldBy.name.toLowerCase().includes(newValue)
-      )
-    );
+  const handleClick = (e) => {
+    //console.log(e);
+    axios.post("/api/orders/delivery", { id: e }).then((resp) => {
+      console.log(resp.data);
+    });
+    window.location.reload(false);
   };
 
   return (
@@ -110,29 +87,22 @@ function Vegetables(props) {
         variant="h2"
         component="h2"
       >
-        Vegetables
+        Delivery
       </Typography>
-      <SearchBar
-        className={classes.search}
-        value={search}
-        onChange={(newValue) => handleSearch(newValue)}
-        onRequestSearch={handleSearch}
-        onCancelSearch={() => handleSearch("")}
-      />
 
       {displayItems.map((item) => (
         <Card className={classes.root}>
           <CardActionArea>
             <CardMedia
               className={classes.media}
-              image={item.url}
+              image={item.item && item.item.url}
               title="Contemplative Reptile"
             />
             <CardContent className={classes.CardContent}>
               <Grid container spacing={0}>
                 <Grid item xs={12}>
                   <Typography gutterBottom variant="h5" component="h2">
-                    {item.name}
+                    {item.item && item.item.name}
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
@@ -142,82 +112,48 @@ function Vegetables(props) {
                     component="p"
                     color="textPrimary"
                   >
-                    Sold by: {item.soldBy.name}
+                    Sold by: {item.seller && item.seller.name}
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
+                  <Typography
+                    gutterBottom
+                    variant="subtitle1"
+                    component="p"
+                    color="textPrimary"
+                  >
+                    Delivering To : {item.buyer && item.buyer.name}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
                   <Typography variant="body2" color="primary" component="p">
-                    Cost : Rs. {item.cost}
+                    Total Cost : Rs. {item.cost}
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
-                  {item.quantity > 0 ? (
-                    <GreenTextTypography
-                      variant="body2"
-                      color="textPrimary"
-                      component="p"
-                      align="right"
-                    >
-                      In Stock
-                    </GreenTextTypography>
-                  ) : (
-                    <Typography
-                      variant="body2"
-                      color="error"
-                      component="p"
-                      align="right"
-                    >
-                      Out of Stock
-                    </Typography>
-                  )}
-                </Grid>
-                <Grid item xs={6}>
+
+                <Grid item xs={12}>
                   <Typography
                     variant="body2"
                     color="textSecondary"
                     component="p"
                   >
-                    Quantity Availabe : {item.quantity}
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                    align="right"
-                  >
-                    Distance : {item.distance} km
+                    Quantity : {item.quantity}
                   </Typography>
                 </Grid>
               </Grid>
             </CardContent>
           </CardActionArea>
           <CardActions>
-            {item.quantity > 0 ? (
-              <>
-                <Link href={"/online/" + item._id} underline="none">
-                  <Button size="small" color="primary">
-                    Buy Online
-                  </Button>
-                </Link>
-
-                <Link href={"/offline/" + item._id} underline="none">
-                  <Button size="small" color="secondary">
-                    Buy Offline
-                  </Button>
-                </Link>
-              </>
-            ) : (
-              <>
-                <Button size="small" color="primary" disabled>
-                  Buy Online
-                </Button>
-                <Button size="small" color="secondary" disabled>
-                  Buy Offline
-                </Button>
-              </>
-            )}
+            <>
+              <Button
+                size="small"
+                color="primary"
+                onClick={() => handleClick(item._id)}
+              >
+                {item.status === "Order Placed" && "Accept"}
+                {item.status === "In Transit" && "Deliver"}
+              </Button>
+            </>
           </CardActions>
         </Card>
       ))}

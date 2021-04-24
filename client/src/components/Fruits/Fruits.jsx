@@ -65,7 +65,17 @@ function Fruits(props) {
   useEffect(() => {
     axios.get("/api/items/all").then((resp) => {
       let { data } = resp;
-      data = data.filter((i) => i.category === "Fruits");
+      console.log(data);
+      if (props.auth.user.type === "Customer") {
+        data = data.filter(
+          (i) => i.category === "Fruits" && i.type === "Retailer"
+        );
+      } else {
+        data = data.filter(
+          (i) => i.category === "Fruits" && i.type === "Wholesaler"
+        );
+      }
+
       //console.log(data);
       //console.log(props.auth.user.location);
       data.forEach((d, i, arr) => {

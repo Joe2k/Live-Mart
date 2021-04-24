@@ -8,7 +8,7 @@ import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import NotificationsIcon from "@material-ui/icons/Notifications";
+import NotificationsIcon from "@material-ui/icons/Motorcycle";
 import LoginIcon from "@material-ui/icons/ExitToApp";
 import RegisterIcon from "@material-ui/icons/ListAlt";
 import MoreIcon from "@material-ui/icons/MoreVert";
@@ -20,6 +20,7 @@ import { logoutUser } from "../../actions/authActions";
 import logo from "../../resources/shopping-cart.png";
 import Brightness7Icon from "@material-ui/icons/Brightness7";
 import Brightness3Icon from "@material-ui/icons/Brightness3";
+import CalIcon from "@material-ui/icons/Event";
 import { CustomThemeContext } from "../../context/CustomThemeProvider";
 
 const useStyles = makeStyles((theme) => ({
@@ -193,10 +194,16 @@ function Navbar(props) {
                 <IconButton
                   aria-label="show 17 new notifications"
                   color="inherit"
+                  href="/events"
                 >
-                  <Badge badgeContent={17} color="secondary">
-                    <NotificationsIcon />
-                  </Badge>
+                  <CalIcon />
+                </IconButton>
+                <IconButton
+                  aria-label="show 17 new notifications"
+                  color="inherit"
+                  href="/orders"
+                >
+                  <NotificationsIcon />
                 </IconButton>
 
                 <Button color="inherit" onClick={() => props.logoutUser()}>

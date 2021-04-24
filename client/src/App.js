@@ -19,6 +19,9 @@ import Offline from "./components/Offline/Offline";
 import Create from "./components/Create/Create";
 import Fruits from "./components/Fruits/Fruits";
 import Grocery from "./components/Grocery/Grocery";
+import Orders from "./components/Orders/Orders";
+import Events from "./components/Events/Events";
+import Delivery from "./components/Delivery/Delivery";
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -45,17 +48,20 @@ function App() {
       <div className="App">
         <Router>
           <NavBar />
-          <Route exact path="/" component={Landing} />
+          {/* <Route exact path="/" component={Landing} /> */}
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
+          <Route exact path="/delivery" component={Delivery} />
           <Switch>
-            <PrivateRoute exact path="/dashboard" component={Dashboard} />
+            <PrivateRoute exact path="/" component={Dashboard} />
             <PrivateRoute exact path="/vegetables" component={Vegetables} />
             <PrivateRoute exact path="/fruits" component={Fruits} />
             <PrivateRoute exact path="/grocery" component={Grocery} />
             <PrivateRoute exact path="/online/:id" component={Online} />
             <PrivateRoute exact path="/offline/:id" component={Offline} />
             <PrivateRoute exact path="/create" component={Create} />
+            <PrivateRoute exact path="/orders" component={Orders} />
+            <PrivateRoute exact path="/events" component={Events} />
           </Switch>
         </Router>
       </div>

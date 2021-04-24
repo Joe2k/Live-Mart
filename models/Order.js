@@ -11,6 +11,8 @@ const OrderSchema = new Schema({
     name: { type: String },
     contact: { type: String },
   },
+  cost: { type: Number },
+  quantity: { type: Number },
 });
 
 module.exports = Order = mongoose.model("Order", OrderSchema);

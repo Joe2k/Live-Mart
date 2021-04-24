@@ -86,7 +86,7 @@ function Online(props) {
     latitude: 13.102343,
   });
   const [item, setItem] = useState({});
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   React.useEffect(() => {
     axios.get("/api/items/one/" + id).then((resp) => {
@@ -121,11 +121,16 @@ function Online(props) {
   }, [currentTheme]);
 
   const handleSubmit = () => {
-    let submitForm = { quantity, itemId: id, userId: props.auth.user.id };
+    let submitForm = {
+      quantity,
+      itemId: id,
+      userId: props.auth.user.id,
+      cost: quantity * item.cost,
+    };
 
     axios.post("/api/orders/online", submitForm).then((resp) => {
       console.log(resp.data);
-      props.history.push("/dashboard");
+      props.history.push("/orders");
     });
   };
 
@@ -142,7 +147,7 @@ function Online(props) {
             Buy Online
           </Typography>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item md={4}>
           <Card className={classes.root}>
             <CardActionArea>
               <CardMedia
@@ -153,7 +158,7 @@ function Online(props) {
             </CardActionArea>
           </Card>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item md={4}>
           <Card className={classes.root}>
             <CardActionArea>
               <CardContent className={classes.CardContent}>
@@ -235,7 +240,7 @@ function Online(props) {
             </div>
           </MapGL>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item md={4}>
           <form className={classes.form} noValidate autoComplete="off">
             <TextField
               id="standard-number"
@@ -245,7 +250,16 @@ function Online(props) {
               fullWidth
               value={quantity}
               onChange={(e) => setQuantity(e.target.value)}
+              InputProps={{
+                inputProps: {
+                  max: item.quantity,
+                  min: 1,
+                },
+              }}
             />
+            <Typography variant="subtitle1" color="textPrimary" component="p">
+              Total Cost : {quantity * item.cost}
+            </Typography>
             <Button
               variant="contained"
               color="primary"

@@ -136,15 +136,15 @@ router.post("/login", (req, res) => {
             html: `<h3>Live Mart Login</h3><p>Your login OTP is <strong>${otp}</strong></p>`,
           };
 
-          // sgMail
-          //   .send(msg)
-          //   .then((response) => {
-          //     console.log(response[0].statusCode);
-          //     console.log(response[0].headers);
-          //   })
-          //   .catch((error) => {
-          //     console.error(error);
-          //   });
+          sgMail
+            .send(msg)
+            .then((response) => {
+              console.log(response[0].statusCode);
+              console.log(response[0].headers);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
 
           User.findOneAndUpdate({ email }, { otp: otp }, (err, doc) => {
             if (err) console.log(err);

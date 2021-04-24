@@ -119,7 +119,7 @@ class Register extends Component {
   componentDidMount() {
     // If logged in and user navigates to Register page, should redirect them to dashboard
     if (this.props.auth.isAuthenticated) {
-      this.props.history.push("/dashboard");
+      this.props.history.push("/");
     }
     navigator.geolocation.getCurrentPosition((position) => {
       console.log("Latitude is :", position.coords.latitude);
