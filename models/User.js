@@ -49,6 +49,8 @@ const UserSchema = new Schema({
       item: { type: mongoose.Schema.Types.ObjectId, ref: "Item" },
     },
   ],
+  buyingOrders: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
+  sellingOrders: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
 });
 
 module.exports = User = mongoose.model("User", UserSchema);

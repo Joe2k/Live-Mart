@@ -86,6 +86,7 @@ function Online(props) {
     latitude: 13.102343,
   });
   const [item, setItem] = useState({});
+  const [quantity, setQuantity] = useState(0);
 
   React.useEffect(() => {
     axios.get("/api/items/one/" + id).then((resp) => {
@@ -118,6 +119,15 @@ function Online(props) {
       setMapStyle("mapbox://styles/mapbox/streets-v11");
     else setMapStyle("mapbox://styles/mapbox/dark-v9");
   }, [currentTheme]);
+
+  const handleSubmit = () => {
+    let submitForm = { quantity, itemId: id, userId: props.auth.user.id };
+
+    axios.post("/api/orders/online", submitForm).then((resp) => {
+      console.log(resp.data);
+      props.history.push("/dashboard");
+    });
+  };
 
   return (
     <Container className={classes.container}>
@@ -233,8 +243,15 @@ function Online(props) {
               variant="outlined"
               type="number"
               fullWidth
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
             />
-            <Button variant="contained" color="primary" fullWidth>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={handleSubmit}
+            >
               Buy Online
             </Button>
           </form>
