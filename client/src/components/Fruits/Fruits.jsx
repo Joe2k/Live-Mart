@@ -15,6 +15,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import getDistance from "../../utils/getDistance";
 import { Link } from "@material-ui/core";
+import Rating from "@material-ui/lab/Rating";
 
 const useStyles = makeStyles({
   root: {
@@ -132,9 +133,22 @@ function Fruits(props) {
             />
             <CardContent className={classes.CardContent}>
               <Grid container spacing={0}>
-                <Grid item xs={12}>
+                <Grid item xs={6}>
                   <Typography gutterBottom variant="h5" component="h2">
                     {item.name}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="h2"
+                    align="right"
+                  >
+                    <Rating
+                      name="simple-controlled"
+                      value={Math.floor(Math.random() * 5) + 1}
+                    />
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>

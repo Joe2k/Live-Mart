@@ -145,14 +145,25 @@ function Vegetables(props) {
           </CardActionArea>
           <CardActions>
             <>
-              <Button
-                size="small"
-                color="primary"
-                onClick={() => handleClick(item._id)}
-              >
-                {item.status === "Order Placed" && "Accept"}
-                {item.status === "In Transit" && "Deliver"}
-              </Button>
+              {item.status === "Delivered" ? (
+                <Button
+                  size="small"
+                  color="primary"
+                  onClick={() => handleClick(item._id)}
+                  disabled
+                >
+                  {item.status === "Delivered" && "Delivered!"}
+                </Button>
+              ) : (
+                <Button
+                  size="small"
+                  color="primary"
+                  onClick={() => handleClick(item._id)}
+                >
+                  {item.status === "Order Placed" && "Accept"}
+                  {item.status === "In Transit" && "Deliver"}
+                </Button>
+              )}
             </>
           </CardActions>
         </Card>

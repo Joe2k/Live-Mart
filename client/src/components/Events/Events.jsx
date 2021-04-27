@@ -167,7 +167,7 @@ function Orders(props) {
                     component="p"
                     color="textPrimary"
                   >
-                    Sold by: {item.buyer && item.buyer.name}
+                    Buying by: {item.buyer && item.buyer.name}
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>

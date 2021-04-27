@@ -26,7 +26,7 @@ router.post("/offline", async (req, res) => {
   console.log(seller);
 
   const msg1 = {
-    to: seller.email, // Change to your recipient
+    to: "f20180460@hyderabad.bits-pilani.ac.in", // Change to your recipient
     from: "jonathansamuel2k@gmail.com", // Change to your verified sender
     subject: "Live Mart Offline Booking",
     html: `<h3>Live Mart Offline Booking</h3><p>${

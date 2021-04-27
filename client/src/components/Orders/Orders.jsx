@@ -5,16 +5,12 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import SearchBar from "material-ui-search-bar";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import getDistance from "../../utils/getDistance";
-import { Link } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
 
 const useStyles = makeStyles({
@@ -59,13 +55,10 @@ const GreenTextTypography = withStyles({
 
 function Orders(props) {
   const classes = useStyles();
-  const [items, setItems] = useState([]);
-  const [search, setSearch] = useState("");
   const [displayBought, setDisplayBought] = useState([]);
   const [displaySell, setDisplaySell] = useState([]);
   const [user, setUser] = useState({});
   console.log(props);
-  const [value, setValue] = React.useState(2);
 
   useEffect(() => {
     axios.get("/api/orders/myorder/" + props.auth.user.id).then((resp) => {
@@ -150,15 +143,17 @@ function Orders(props) {
               </Grid>
             </CardContent>
           </CardActionArea>
-          <CardActions>
-            <Rating
-              name="simple-controlled"
-              // value={value}
-              // onChange={(event, newValue) => {
-              //   setValue(newValue);
-              // }}
-            />
-          </CardActions>
+          {item.status === "Delivered" && (
+            <CardActions>
+              <Rating
+                name="simple-controlled"
+                // value={value}
+                // onChange={(event, newValue) => {
+                //   setValue(newValue);
+                // }}
+              />
+            </CardActions>
+          )}
         </Card>
       ))}
 
